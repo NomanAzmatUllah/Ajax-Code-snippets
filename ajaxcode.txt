@@ -1,0 +1,336 @@
+<script type="text/javascript">
+
+    var id = "";
+    var StartbreakTimeValue = "";
+    var EndBreakTimeValue = "";
+    var col1 = "", col2 = "", col3 = "";
+    var currentRow = "";
+
+    function getTime() {
+        var date_obj = new Date();
+        var date_obj_hours = date_obj.getHours();
+        var date_obj_mins = date_obj.getMinutes();
+        var date_obj_second = date_obj.getSeconds();
+
+        var date_obj_time = "'" + date_obj_hours + ":" + date_obj_mins + ":" + date_obj_second + "'";
+        return date_obj_time;
+    }
+
+
+    function getdatetime(x) {
+
+        var dateselect = new Date();
+        dateselect = x.get_selectedDate();
+        var timedisplay = new Date();
+        x.get_element().value = dateselect.format("dd/MM/yyyy") + "-" + timedisplay.format("hh:mm:ss");
+
+    }
+
+   
+    
+ $(function () {
+ 
+     $("#<%= StartDateBC.ClientID %>").datepicker({ dateFormat: 'dd-mm-yy' });
+   
+    });
+
+  $(function () {
+ 
+       $("#<%= EndDateBC.ClientID %>").datepicker({ dateFormat: 'dd-mm-yy' });
+    });
+
+
+    $(function () {
+ 
+        $("#<%= ExcludeDaysDate.ClientID %>").datepicker({ dateFormat: 'dd-mm-yy' });
+
+
+    });
+
+
+    $("[id$=Back]").bind("click", function (event) {
+        event.preventDefault();
+        window.location.href = "campaignManagerMain.aspx";
+    });
+
+
+
+    $("[id$=BackTomain]").bind("click", function (event) {
+        event.preventDefault();
+        window.location.href = "campaignManagerMain.aspx";
+    });
+
+
+
+    function EnableDisableTextBox(chkPassport) {
+        var excludeDate = document.getElementById("<%=ExcludeDaysDate.ClientID %>");
+        var Addbutton = document.getElementById("<%=AddExcludeDays.ClientID %>");
+     
+        excludeDate.disabled = chkPassport.checked ? false : true;
+        Addbutton.disabled = chkPassport.checked ? false : true;
+      
+        if (!excludeDate.disabled && !Addbutton.disabled) {
+
+            excludeDate.focus();
+            Addbutton.focus();         
+        }
+    }
+
+    //SetCLICheckBox
+
+    $(function () {
+        $("[id*=SetCLICheckBox]").click(function () {
+
+         
+             if ($('#<%= IvrSetCLIDrpDwn.ClientID %>').prop('disabled') == true) {
+
+
+                 $('#<%= IvrSetCLIDrpDwn.ClientID %>').prop('disabled', false);
+             }
+             else {
+
+                 $('#<%= IvrSetCLIDrpDwn.ClientID %>').prop('disabled', true);
+             }                
+            
+        });
+    });
+
+
+    $(function () {
+        $("[id*=AgentIvrsetCli]").click(function () {
+
+         
+             if ($('#<%= AgentIVRSetCLIdrpdwn.ClientID %>').prop('disabled') == true) {
+
+
+                 $('#<%= AgentIVRSetCLIdrpdwn.ClientID %>').prop('disabled', false);
+             }
+             else {
+
+                 $('#<%= AgentIVRSetCLIdrpdwn.ClientID %>').prop('disabled', true);
+             }                
+            
+        });
+    });
+
+
+
+    //Add Source And Destination File Column into Grid
+
+    $(function () {
+        $("[id*=addintogrid]").click(function () {
+            var Sourcevalues = "";
+            var Destinationvalues = ""
+            var Source_selected_value = $("[id*=SourceListBox] option:selected");
+            var Destination_selecte_value = $("[id*=DestinationListBox] option:selected");
+            var d = "Data1"
+            var d1 = "CNICNossssss"
+            var pho = "PhoneNo"
+            var pho1 = "PhNo"
+            Source_selected_value.each(function () {
+                Sourcevalues += $(this).val()
+            });
+
+            Destination_selecte_value.each(function () {
+                Destinationvalues += $(this).val()               
+            });
+         
+
+            if (Destinationvalues == d && Sourcevalues != d1 || Sourcevalues == d1 && Destinationvalues != d) {
+                alert("Please Select Data1 for Cnic")
+
+            }
+            else if (Sourcevalues == "" || Destinationvalues == "") {
+
+                alert("Please Select Source Or Destination Value")
+            }
+            else if (Destinationvalues == pho && Sourcevalues != pho1 || Sourcevalues == pho1 && Destinationvalues != pho)
+            {
+            
+                alert(" Please Select Phonenumber from Source & Destination Column")
+            }
+
+
+
+            else {
+
+                //alert("Source Value" + Sourcevalues + "Destination Value" + Destinationvalues)
+                var new_row = '<tr><td class="Sourcevalues">' + Sourcevalues + '</td><td class="Destinationvalues">' + Destinationvalues + '</td><td class="Heading">' + Sourcevalues + '</td>';
+                $("[id*=LoadDataGrid] tbody").append(new_row);
+               
+                $("[id*=SourceListBox] option:selected").remove();
+                $("[id*=DestinationListBox] option:selected").remove();
+
+            }
+            return false;
+        });
+    });
+
+
+
+    //Back to the grid
+
+  
+    $(function () {
+        $('#LoadDataGrid').on('click', 'tr', function () {
+            var table = document.getElementById('<%=LoadDataGrid.ClientID%>')
+            var cells = table.getElementsByTagName('tr');              
+            currentRow = $(this).closest("tr");
+            $(currentRow).css("background-color", "#A6ECF1");
+             col1 = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+             col2 = currentRow.find("td:eq(1)").text(); // get current row 2nd TD
+             col3 = currentRow.find("td:eq(2)").text(); // get current row 3rd TD
+            //var data = col1 + "\n" + col2 + "\n" + col3;
+            //alert(data); //backtogrid            
+        });
+    });
+
+    //retrun values to list box
+
+    $(function () {
+        $("[id*=backtogrid]").click(function () {
+
+
+            if (col1 == ""  || col2 == "" ) {
+
+                alert("Please select row First")
+
+            }
+            else {
+              
+                $("#<%=SourceListBox.ClientID %>").append('<option value="'+col1+'"> '+col1+'</option>');
+                $("#<%=DestinationListBox.ClientID %>").append('<option value="'+col2+'">'+col2+'</option>');
+                 currentRow.remove();
+                col1 = "";
+                col2 = "";
+                currentRow = "";
+            }
+
+
+
+        });
+    });
+
+
+
+  
+    //Send Load Data Grid Values to Function To 
+
+    function SaveTemplate() {
+        var notfound = false;
+        var totalRowCount = $("[id*=LoadDataGrid] tr").length;
+        var count = $("[id*=LoadDataGrid] tr").val()
+        //var rowCount = $('#GridView1 tr').length;
+        if (totalRowCount < 0) {
+            alert("Please add Data detail");
+           
+        }
+        var valdt;
+        var obj = {};      
+        var baseUrl = document.URL;   //(window.location).href; // You can also use document.URL
+        //var koopId = baseUrl.substring(baseUrl.lastIndexOf('=') + 1);
+        var capid = $("#<%=IDForLoadingData.ClientID %>").text()
+
+   
+        valdt = $('#LoadDataGrid').tableToJSON();
+        obj.CampaignId = capid;
+        obj.table = JSON.stringify(valdt);
+
+        if (obj.table.includes("PhNo")){ //|| obj.table.includes("CNICNossssss")) {
+
+            notfound = false;
+        }
+        else {       
+        
+            notfound = true;
+        }
+          
+
+        if (notfound == true) {
+
+            alert("Please Select Phone Number Column ")
+            return;
+        }
+       
+        var strdata = JSON.stringify(obj);
+
+        $.ajax({
+            type: "POST",
+            url: "AddNewCampaign.aspx/InsertTemplates",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: strdata,
+            success: function (response) {
+                
+                //var result = response.d.text.split("|");
+                var result = response.d;
+                var splitsdata = result.split("|");
+                var dbrecords = splitsdata[0];
+                var rejected = splitsdata[1];
+
+                document.getElementById("totalRecordLoaded").innerText = dbrecords;
+                document.getElementById("RejectedRecords").innerText = rejected;
+                alert("Save successfully ","False");
+                //window.location.href = "AddNewCampaign.aspx";
+                <%--var totalrecordinfile = document.getElementById('<%=totalrecordsinexcel.ClientID%>')
+                var totalrecordsaveindb = document.getElementById('<%=totalRecordLoaded.ClientID%>')
+
+                if (totalrecordinfile == totalrecordsaveindb) {
+
+                    //RejectedRecords
+                    document.getElementById("RejectedRecords").innerText = 0 ;
+                }--%>
+
+            }
+                         
+          });      
+    }
+
+
+
+    function formatTime(timeInput) {
+
+        intValidNum = timeInput.value;
+
+        if (intValidNum < 24 && intValidNum.length == 2) {
+            timeInput.value = timeInput.value + ":";
+            return false;
+        }
+        if (intValidNum == 24 && intValidNum.length == 2) {
+            timeInput.value = timeInput.value.length - 2 + "0:";
+            return false;
+        }
+        if (intValidNum > 24 && intValidNum.length == 2) {
+            timeInput.value = "";
+            return false;
+        }
+
+        //if (intValidNum.length == 5 && intValidNum.slice(-2) < 60) {
+        //    timeInput.value = timeInput.value + "";
+        //    return false;
+        //}
+        //if (intValidNum.length == 5 && intValidNum.slice(-2) > 60) {
+        //    timeInput.value = timeInput.value.slice(0, 2) + "";
+        //    return false;
+        //}
+        if (intValidNum.length == 5 && intValidNum.slice(-2) == 60) {
+            timeInput.value = timeInput.value.slice(0, 2) + ":00";
+            return false;
+        }
+
+
+        if (intValidNum.length == 8 && intValidNum.slice(-2) > 60) {
+            timeInput.value = timeInput.value.slice(0, 5) + ":";
+            return false;
+        }
+        if (intValidNum.length == 8 && intValidNum.slice(-2) == 60) {
+            timeInput.value = timeInput.value.slice(0, 5) + ":00";
+            return false;
+        }
+
+
+
+    }
+
+
+</script>

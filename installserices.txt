@@ -1,0 +1,8 @@
+ C:\Windows\Microsoft.NET\Framework\v4.0.30319
+
+installutil "c:\my directory\service1.exe"
+
+installutil -u BackupService.exe
+
+
+"C:\Users\Noman\Documents\Visual Studio 2015\Projects\backupService\backupService\backupService\bin\Release\backupservice.exe"

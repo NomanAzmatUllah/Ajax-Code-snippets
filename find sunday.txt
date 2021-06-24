@@ -1,0 +1,11 @@
+declare @startDate date,@enddate date
+set @startDate='01/01/2012'
+set @enddate='12/31/2012'
+
+while @startDate<=@enddate
+begin
+if(DATENAME(dw,@startDate)='Sunday' or DATENAME(dw,@startDate)='Saturday')
+
+insert into MyHoliday(Holiday_date,Specification) values(convert(date,@startDate,103),DATENAME(dw,@startDate))
+set @startDate=DATEADD(DD,1,@startDate)
+end
